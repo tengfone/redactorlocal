@@ -1,0 +1,9 @@
+# RedactorLocal
+
+> RedactorLocal is a privacy-first web app that automatically redacts faces in images and video entirely in your browser. No uploads, no cloud — all processing happens client-side.
+
+RedactorLocal lets you drag and drop photos or videos, detects faces with an on-device AI model, and blurs or pixelates them. You can choose the redaction style and select which specific faces to keep visible, then download the redacted image or video.
+
+## Pages
+
+- [Home](/): Upload media, detect and redact faces locally, and download the result.
