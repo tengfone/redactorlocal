@@ -457,23 +457,16 @@ export function RedactorWorkspace() {
                   })}
 
                 {busy && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-background/70 backdrop-blur-sm">
-                    <Loader2 className="size-6 animate-spin text-primary" />
-                    <p className="mono text-xs text-muted-foreground">
-                      {mediaType === "video"
-                        ? `Scanning frames · ${Math.round(scanProgress * 100)}%`
-                        : "Detecting faces…"}
-                    </p>
-                    {mediaType === "video" && (
-                      <Progress
-                        value={scanProgress * 100}
-                        className="h-1 w-48"
-                      />
-                    )}
-                  </div>
+                  <ScanOverlay
+                    mode={mediaType === "video" ? "video" : "image"}
+                    progress={scanProgress}
+                    found={scanFaces}
+                  />
                 )}
 
-                <div className="pointer-events-none absolute inset-x-0 top-0 h-px animate-scanline bg-primary/70" />
+                {!busy && (
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-px animate-scanline bg-primary/70" />
+                )}
               </div>
             </div>
 
