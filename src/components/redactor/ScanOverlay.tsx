@@ -1,4 +1,4 @@
-import { ScanFace } from "lucide-react";
+import { ScanFace, Loader2 } from "lucide-react";
 
 interface ScanOverlayProps {
   /** "image" runs a one-shot detection, "video" a multi-frame scan. */
