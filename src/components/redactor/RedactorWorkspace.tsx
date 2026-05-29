@@ -80,7 +80,7 @@ export function RedactorWorkspace() {
     if (!detectModRef.current) {
       setModelStatus("loading");
       try {
-        const mod = await import("@/lib/redactor/detector.client");
+        const mod = await import("@/lib/redactor/detector.runtime");
         await mod.loadDetector();
         detectModRef.current = mod;
         setProvider(mod.getActiveProvider());
