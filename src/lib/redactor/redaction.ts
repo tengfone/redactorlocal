@@ -38,11 +38,27 @@ function padRect(
   };
 }
 
+function regionPath(
+  ctx: CanvasRenderingContext2D,
+  rect: PaddedRect,
+  radius: number,
+) {
+  const { x, y, w, h } = rect;
+  const r = Math.min(Math.max(0, radius), 0.5) * Math.min(w, h);
+  ctx.beginPath();
+  if (r <= 0.5) {
+    ctx.rect(x, y, w, h);
+  } else {
+    ctx.roundRect(x, y, w, h, r);
+  }
+}
+
 function redactRegion(
   ctx: CanvasRenderingContext2D,
   rect: PaddedRect,
   mode: RedactionMode,
   strength: number,
+  radius: number,
 ) {
   const { x, y, w, h } = rect;
   const size = Math.max(w, h);
@@ -51,7 +67,8 @@ function redactRegion(
   if (mode === "box") {
     ctx.save();
     ctx.fillStyle = "#000000";
-    ctx.fillRect(x, y, w, h);
+    regionPath(ctx, rect, radius);
+    ctx.fill();
     ctx.restore();
     return;
   }
@@ -59,8 +76,7 @@ function redactRegion(
   if (mode === "blur") {
     const blurPx = Math.max(4, Math.round(size * 0.6 * intensity));
     ctx.save();
-    ctx.beginPath();
-    ctx.rect(x, y, w, h);
+    regionPath(ctx, rect, radius);
     ctx.clip();
     // Drawing the canvas back onto itself with a blur filter, clipped to the
     // region, blurs only the selected area.
@@ -83,6 +99,8 @@ function redactRegion(
   tctx.imageSmoothingEnabled = false;
   tctx.drawImage(ctx.canvas, x, y, w, h, 0, 0, smallW, smallH);
   ctx.save();
+  regionPath(ctx, rect, radius);
+  ctx.clip();
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(tmp, 0, 0, smallW, smallH, x, y, w, h);
   ctx.restore();
