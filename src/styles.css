@@ -2,18 +2,20 @@
 @source "../src";
 @import "tw-animate-css";
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Space+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400;500;600&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
 /*
- * "Zero-Cloud" Redactor — AI-lab SaaS design system.
- * Dark technical palette, restrained electric-teal accent, hairline borders.
+ * Redactor.local — "Cloud White" utility-command design system.
+ * Light, airy SaaS palette with a focused electric-blue accent.
+ * Headings: Space Grotesk. Body: DM Sans. Technical labels: JetBrains Mono.
  * All color tokens use oklch.
  */
 
 @theme inline {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
   --radius-sm: calc(var(--radius) - 4px);
@@ -63,56 +65,56 @@
 }
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0.625rem;
 
-  --background: oklch(0.16 0.012 248);
-  --foreground: oklch(0.95 0.006 240);
+  --background: oklch(0.992 0.001 247);
+  --foreground: oklch(0.279 0.041 260);
 
-  --card: oklch(0.2 0.014 248);
-  --card-foreground: oklch(0.95 0.006 240);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.279 0.041 260);
 
-  --popover: oklch(0.19 0.014 248);
-  --popover-foreground: oklch(0.95 0.006 240);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.279 0.041 260);
 
-  --primary: oklch(0.8 0.13 192);
-  --primary-foreground: oklch(0.18 0.02 220);
+  --primary: oklch(0.623 0.188 259);
+  --primary-foreground: oklch(0.99 0.002 247);
 
-  --secondary: oklch(0.26 0.016 248);
-  --secondary-foreground: oklch(0.95 0.006 240);
+  --secondary: oklch(0.931 0.006 250);
+  --secondary-foreground: oklch(0.279 0.041 260);
 
-  --muted: oklch(0.24 0.014 248);
-  --muted-foreground: oklch(0.66 0.018 240);
+  --muted: oklch(0.948 0.005 250);
+  --muted-foreground: oklch(0.62 0.035 257);
 
-  --accent: oklch(0.8 0.13 192);
-  --accent-foreground: oklch(0.18 0.02 220);
+  --accent: oklch(0.623 0.188 259);
+  --accent-foreground: oklch(0.99 0.002 247);
 
-  --destructive: oklch(0.62 0.21 18);
-  --destructive-foreground: oklch(0.98 0.005 240);
+  --destructive: oklch(0.637 0.237 25);
+  --destructive-foreground: oklch(0.99 0.002 247);
 
-  --success: oklch(0.74 0.16 155);
-  --success-foreground: oklch(0.18 0.02 220);
+  --success: oklch(0.723 0.192 149);
+  --success-foreground: oklch(0.99 0.002 247);
 
-  --warning: oklch(0.82 0.15 75);
-  --warning-foreground: oklch(0.2 0.02 60);
+  --warning: oklch(0.769 0.165 70);
+  --warning-foreground: oklch(0.27 0.04 60);
 
-  --border: oklch(1 0 0 / 9%);
-  --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.8 0.13 192);
+  --border: oklch(0.916 0.013 256);
+  --input: oklch(0.916 0.013 256);
+  --ring: oklch(0.623 0.188 259);
 
-  --chart-1: oklch(0.8 0.13 192);
-  --chart-2: oklch(0.74 0.16 155);
-  --chart-3: oklch(0.82 0.15 75);
-  --chart-4: oklch(0.62 0.21 18);
+  --chart-1: oklch(0.623 0.188 259);
+  --chart-2: oklch(0.723 0.192 149);
+  --chart-3: oklch(0.769 0.165 70);
+  --chart-4: oklch(0.637 0.237 25);
   --chart-5: oklch(0.7 0.12 280);
 
-  --sidebar: oklch(0.18 0.013 248);
-  --sidebar-foreground: oklch(0.95 0.006 240);
-  --sidebar-primary: oklch(0.8 0.13 192);
-  --sidebar-primary-foreground: oklch(0.18 0.02 220);
-  --sidebar-accent: oklch(0.26 0.016 248);
-  --sidebar-accent-foreground: oklch(0.95 0.006 240);
-  --sidebar-border: oklch(1 0 0 / 9%);
-  --sidebar-ring: oklch(0.8 0.13 192);
+  --sidebar: oklch(0.931 0.006 250);
+  --sidebar-foreground: oklch(0.279 0.041 260);
+  --sidebar-primary: oklch(0.623 0.188 259);
+  --sidebar-primary-foreground: oklch(0.99 0.002 247);
+  --sidebar-accent: oklch(1 0 0);
+  --sidebar-accent-foreground: oklch(0.279 0.041 260);
+  --sidebar-border: oklch(0.916 0.013 256);
+  --sidebar-ring: oklch(0.623 0.188 259);
 }
 
 @layer base {
@@ -141,6 +143,24 @@
         transparent 1px
       );
     background-size: 44px 44px;
+  }
+
+  /* soft radial dot texture used inside the light dropzone canvas */
+  .dot-grid {
+    background-image: radial-gradient(
+      color-mix(in oklab, var(--muted-foreground) 30%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 20px 20px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
   }
 
   .mono {
