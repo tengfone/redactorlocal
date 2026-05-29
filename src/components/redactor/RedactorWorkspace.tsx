@@ -52,6 +52,7 @@ export function RedactorWorkspace() {
   const [provider, setProvider] = useState<ExecutionProvider | null>(null);
   const [busy, setBusy] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
+  const [scanFaces, setScanFaces] = useState(0);
   const [exporting, setExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState(0);
   const [playing, setPlaying] = useState(false);
