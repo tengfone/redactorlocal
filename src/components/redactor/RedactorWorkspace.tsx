@@ -9,6 +9,7 @@ import { Dropzone } from "./Dropzone";
 import { PrivacyBadge } from "./PrivacyBadge";
 import { StatusBar } from "./StatusBar";
 import { RedactionControls } from "./RedactionControls";
+import { ScanOverlay } from "./ScanOverlay";
 import { FaceSelectionPanel } from "./FaceSelectionPanel";
 import { applyRedaction } from "@/lib/redactor/redaction";
 import {
