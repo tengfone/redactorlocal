@@ -27,6 +27,7 @@ type DetectorModule = {
     source: HTMLImageElement | HTMLVideoElement | HTMLCanvasElement,
     srcW: number,
     srcH: number,
+    options?: { tiled?: boolean; scoreThreshold?: number },
   ) => Promise<FaceBox[]>;
 };
 import {
