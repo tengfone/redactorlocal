@@ -66,9 +66,7 @@ export function RedactorWorkspace() {
   const stepRef = useRef(0.2);
   const rafRef = useRef<number | null>(null);
   const overlayTickRef = useRef(0);
-  const detectModRef = useRef<
-    typeof import("@/lib/redactor/detector.client") | null
-  >(null);
+  const detectModRef = useRef<DetectorModule | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
