@@ -64,6 +64,7 @@ export async function scanVideo(
     }
     i += 1;
     onProgress?.(Math.min(1, i / total));
+    onFaces?.(map.size);
   }
 
   const trajectories = [...map.values()]
