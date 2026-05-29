@@ -392,14 +392,16 @@ export function RedactorWorkspace() {
   useEffect(() => () => stopLoop(), [stopLoop]);
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-      <div className="space-y-4">
-        <PrivacyBadge online={online} />
-
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      {/* Left: ingestion / canvas */}
+      <div className="space-y-6 lg:col-span-2">
         {!mediaType ? (
-          <Dropzone onFile={onFile} />
+          <>
+            <Dropzone onFile={onFile} />
+            <PrivacyBadge online={online} />
+          </>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div className="flex items-center justify-between gap-2">
               <StatusBar
                 modelStatus={modelStatus}
@@ -412,10 +414,12 @@ export function RedactorWorkspace() {
               </Button>
             </div>
 
-            <div className="relative overflow-hidden rounded-xl border border-border bg-black">
+            <div className="relative overflow-hidden rounded-xl border border-border bg-secondary shadow-sm">
               <div
                 className="relative mx-auto"
-                style={{ aspectRatio: size.w && size.h ? `${size.w}/${size.h}` : "16/9" }}
+                style={{
+                  aspectRatio: size.w && size.h ? `${size.w}/${size.h}` : "16/9",
+                }}
               >
                 <canvas
                   ref={canvasRef}
@@ -514,26 +518,33 @@ export function RedactorWorkspace() {
         )}
       </div>
 
-      <aside className="space-y-6 rounded-xl border border-border bg-card/40 p-5">
-        <div>
-          <h2 className="mb-1 flex items-center gap-2 text-sm font-semibold">
-            <RefreshCw className="size-4 text-primary" /> Redaction
-          </h2>
-          <p className="mono mb-4 text-[10px] text-muted-foreground">
-            Applied live to every redacted face.
-          </p>
-          <RedactionControls options={options} onChange={setOptions} />
+      {/* Right: controls + faces */}
+      <div className="space-y-6">
+        <div className="rounded-xl border border-border bg-card shadow-sm">
+          <div className="flex items-center justify-between border-b border-border px-5 py-4">
+            <h2 className="flex items-center gap-2 font-heading text-sm font-bold tracking-tight">
+              <RefreshCw className="size-4 text-primary" /> Redaction
+            </h2>
+            <span className="mono rounded bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Global
+            </span>
+          </div>
+          <div className="p-5">
+            <RedactionControls options={options} onChange={setOptions} />
+          </div>
         </div>
 
-        <div className="border-t border-border pt-5">
-          <FaceSelectionPanel
-            faces={faces}
-            keepMap={keepMap}
-            onToggle={toggleKeep}
-            onSetAll={setAllKeep}
-          />
+        <div className="rounded-xl border border-border bg-card shadow-sm">
+          <div className="p-5">
+            <FaceSelectionPanel
+              faces={faces}
+              keepMap={keepMap}
+              onToggle={toggleKeep}
+              onSetAll={setAllKeep}
+            />
+          </div>
         </div>
-      </aside>
+      </div>
     </div>
   );
 }
