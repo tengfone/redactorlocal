@@ -20,10 +20,13 @@ export interface RedactionOptions {
   strength: number;
   /** Fraction of the face size to expand the region by (0 - 1). */
   padding: number;
+  /** Corner radius as a fraction of the region's shorter side (0 - 0.5). */
+  radius: number;
 }
 
 export const DEFAULT_REDACTION: RedactionOptions = {
   mode: "blur",
   strength: 60,
   padding: 0.18,
+  radius: 0,
 };
