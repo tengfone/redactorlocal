@@ -1,7 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ShieldCheck, Cpu, Lock, Github } from "lucide-react";
+import {
+  ScanFace,
+  Layers,
+  ShieldCheck,
+  WifiOff,
+  Lock,
+  Github,
+} from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { RedactorWorkspace } from "@/components/redactor/RedactorWorkspace";
+import { useOnlineStatus } from "@/hooks/use-online-status";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,98 +32,134 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+const NAV = [
+  { label: "Redactor", icon: ScanFace, active: true },
+  { label: "Batch Tasks", icon: Layers, active: false },
+  { label: "Privacy Audit", icon: ShieldCheck, active: false },
+];
+
 function Index() {
+  const online = useOnlineStatus();
+
   return (
-    <main className="min-h-screen bg-background">
-      <div className="pointer-events-none fixed inset-0 grid-texture opacity-[0.35]" />
-
-      <header className="relative border-b border-border">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-          <div className="flex items-center gap-2.5">
-            <div className="flex size-8 items-center justify-center rounded-md bg-primary/15 text-primary">
-              <ShieldCheck className="size-5" />
-            </div>
-            <span className="text-sm font-bold tracking-tight">
-              REDACTOR<span className="text-primary">.local</span>
-            </span>
+    <div className="flex h-screen w-full overflow-hidden bg-background text-foreground">
+      {/* Sidebar */}
+      <aside className="hidden w-64 flex-shrink-0 flex-col border-r border-border bg-sidebar lg:flex">
+        <div className="flex h-16 items-center gap-2 border-b border-border px-6">
+          <div className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
+            <div className="size-3.5 rounded-sm border-2 border-current" />
           </div>
-          <div className="mono hidden items-center gap-4 text-xs text-muted-foreground sm:flex">
-            <span className="flex items-center gap-1.5">
-              <Cpu className="size-3.5 text-primary" /> Client-side inference
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Lock className="size-3.5 text-primary" /> Zero-cloud
-            </span>
-          </div>
-        </div>
-      </header>
-
-      <section className="relative mx-auto max-w-6xl px-5 pt-14 text-center">
-        <span className="mono inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-[11px] text-muted-foreground">
-          <span className="size-1.5 animate-pulse-dot rounded-full bg-primary" />
-          ONNX Runtime Web · WebGPU accelerated
-        </span>
-        <h1 className="mx-auto mt-6 max-w-3xl text-4xl font-bold tracking-tight sm:text-6xl">
-          The private media redactor that{" "}
-          <span className="text-glow text-primary">never phones home</span>.
-        </h1>
-        <p className="mx-auto mt-5 max-w-2xl text-balance text-base text-muted-foreground sm:text-lg">
-          Drop in a sensitive video or image. An on-device AI model detects every
-          face so you can blur, pixelate, or black them out — frame by frame on
-          your own GPU. No backend. No uploads. No exceptions.
-        </p>
-      </section>
-
-      <section className="relative mx-auto max-w-6xl px-5 py-12">
-        <RedactorWorkspace />
-      </section>
-
-      <section className="relative mx-auto max-w-6xl px-5 pb-20">
-        <div className="grid gap-4 sm:grid-cols-3">
-          {[
-            {
-              icon: <Lock className="size-5" />,
-              title: "Nothing leaves the device",
-              body: "Files are decoded and processed in-memory. There is literally no upload endpoint.",
-            },
-            {
-              icon: <Cpu className="size-5" />,
-              title: "GPU, not the cloud",
-              body: "WebGPU runs the detector frame-by-frame, so heavy video never hits a server.",
-            },
-            {
-              icon: <ShieldCheck className="size-5" />,
-              title: "Pick who stays visible",
-              body: "Faces are tracked across frames — click any one to keep it un-redacted.",
-            },
-          ].map((f) => (
-            <div
-              key={f.title}
-              className="rounded-xl border border-border bg-card/40 p-5"
-            >
-              <div className="mb-3 flex size-9 items-center justify-center rounded-lg bg-primary/15 text-primary">
-                {f.icon}
-              </div>
-              <h3 className="text-sm font-semibold">{f.title}</h3>
-              <p className="mt-1.5 text-sm text-muted-foreground">{f.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <footer className="relative border-t border-border">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-5 py-6 text-center sm:flex-row sm:text-left">
-          <p className="mono text-xs text-muted-foreground">
-            Runs offline after first load · model cached in your browser
-          </p>
-          <span className="mono flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Github className="size-3.5" /> Built with ONNX Runtime Web +
-            WebCodecs
+          <span className="font-heading text-lg font-bold tracking-tight">
+            REDACTOR<span className="text-primary">.local</span>
           </span>
         </div>
-      </footer>
+
+        <nav className="flex-1 space-y-1 p-4">
+          {NAV.map((item) => (
+            <button
+              key={item.label}
+              type="button"
+              className={cn(
+                "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                item.active
+                  ? "bg-card text-primary shadow-sm"
+                  : "text-muted-foreground hover:bg-card/60 hover:text-foreground",
+              )}
+            >
+              <item.icon className="size-5" />
+              {item.label}
+            </button>
+          ))}
+        </nav>
+
+        <div className="border-t border-border p-6">
+          <p className="mono mb-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+            Engine Status
+          </p>
+          <div className="space-y-2">
+            <StatusRow label="ONNX Runtime" value="Active" />
+            <StatusRow label="WebGPU" value="Accelerated" />
+          </div>
+        </div>
+      </aside>
+
+      {/* Main */}
+      <main className="flex flex-1 flex-col overflow-hidden">
+        <header className="flex h-16 flex-shrink-0 items-center justify-between border-b border-border bg-card px-5 sm:px-8">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <span
+              className={cn(
+                "mono flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold",
+                online
+                  ? "bg-primary/10 text-primary"
+                  : "bg-success/10 text-success",
+              )}
+            >
+              <span
+                className={cn(
+                  "size-1.5 animate-pulse-dot rounded-full",
+                  online ? "bg-primary" : "bg-success",
+                )}
+              />
+              {online ? "ONLINE" : "OFFLINE MODE"}
+            </span>
+            <span className="hidden text-sm text-muted-foreground sm:inline">
+              Zero-cloud local processing
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="mono hidden items-center gap-2 text-xs font-medium text-muted-foreground md:flex">
+              <WifiOff className="size-4" /> Network optional
+            </span>
+            <span className="flex size-8 items-center justify-center rounded-full border border-border bg-secondary font-heading text-xs font-bold text-primary">
+              JD
+            </span>
+          </div>
+        </header>
+
+        <div className="flex-1 overflow-y-auto px-5 py-8 sm:px-8">
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-8">
+              <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+                The private media redactor that{" "}
+                <span className="text-primary">never phones home.</span>
+              </h1>
+              <p className="mt-3 max-w-2xl text-muted-foreground">
+                Drop a sensitive video or image. An on-device AI model detects
+                every face so you can blur, pixelate, or black them out — frame
+                by frame on your own GPU. No backend, no uploads.
+              </p>
+            </div>
+
+            <RedactorWorkspace />
+
+            <footer className="mt-10 flex flex-col items-center justify-between gap-2 border-t border-border pt-6 text-center sm:flex-row sm:text-left">
+              <p className="mono flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Lock className="size-3.5" /> Runs offline after first load ·
+                model cached in your browser
+              </p>
+              <span className="mono flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Github className="size-3.5" /> Built with ONNX Runtime Web +
+                WebCodecs
+              </span>
+            </footer>
+          </div>
+        </div>
+      </main>
 
       <Toaster />
-    </main>
+    </div>
+  );
+}
+
+function StatusRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between text-xs font-medium">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="flex items-center gap-1.5 text-success">
+        <span className="size-1.5 rounded-full bg-success" />
+        {value}
+      </span>
+    </div>
   );
 }
