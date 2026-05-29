@@ -188,6 +188,21 @@ function Index() {
   );
 }
 
+function Guarantee({
+  icon: Icon,
+  label,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+}) {
+  return (
+    <div className="flex items-center gap-2.5 text-sm text-foreground">
+      <Icon className="size-4 flex-shrink-0 text-primary" />
+      {label}
+    </div>
+  );
+}
+
 function StatusRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between text-xs font-medium">
