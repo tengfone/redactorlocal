@@ -77,14 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "RedactorLocal" },
+      { name: "description", content: "Web app automatically redacts sensitive media by blurring faces, license plates, and documents client-side." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "RedactorLocal" },
+      { property: "og:description", content: "Web app automatically redacts sensitive media by blurring faces, license plates, and documents client-side." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "RedactorLocal" },
+      { name: "twitter:description", content: "Web app automatically redacts sensitive media by blurring faces, license plates, and documents client-side." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/574b14a3-d311-4048-ae57-f72d62107b0b/id-preview-35c90a39--875c4d8c-19bb-4d64-80aa-c372a4725bbb.lovable.app-1780073867451.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/574b14a3-d311-4048-ae57-f72d62107b0b/id-preview-35c90a39--875c4d8c-19bb-4d64-80aa-c372a4725bbb.lovable.app-1780073867451.png" },
     ],
     links: [
       {
