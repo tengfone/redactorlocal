@@ -200,6 +200,7 @@ export function RedactorWorkspace() {
             img,
             img.naturalWidth,
             img.naturalHeight,
+            { tiled: true },
           );
           const tracked: TrackedFace[] = result.map((f, i) => ({
             ...f,
