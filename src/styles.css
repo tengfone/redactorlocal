@@ -145,6 +145,24 @@
     background-size: 44px 44px;
   }
 
+  /* soft radial dot texture used inside the light dropzone canvas */
+  .dot-grid {
+    background-image: radial-gradient(
+      color-mix(in oklab, var(--muted-foreground) 30%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 20px 20px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+  }
+
   .mono {
     font-family: var(--font-mono);
     font-feature-settings: "ss01";
