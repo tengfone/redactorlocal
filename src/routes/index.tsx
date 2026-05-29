@@ -1,11 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   ScanFace,
-  Layers,
-  ShieldCheck,
   WifiOff,
   Lock,
   Github,
+  Upload,
+  SlidersHorizontal,
+  Download,
+  Cpu,
 } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { RedactorWorkspace } from "@/components/redactor/RedactorWorkspace";
