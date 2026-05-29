@@ -111,9 +111,15 @@ function Index() {
             <span className="mono hidden items-center gap-2 text-xs font-medium text-muted-foreground md:flex">
               <WifiOff className="size-4" /> Network optional
             </span>
-            <span className="flex size-8 items-center justify-center rounded-full border border-border bg-secondary font-heading text-xs font-bold text-primary">
-              JD
-            </span>
+            <a
+              href="https://github.com/tengfone/redactorlocal"
+              target="_blank"
+              rel="noreferrer noopener"
+              title="View source on GitHub"
+              className="flex size-8 items-center justify-center rounded-full border border-border bg-secondary text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <Github className="size-4" />
+            </a>
           </div>
         </header>
 
@@ -138,10 +144,14 @@ function Index() {
                 <Lock className="size-3.5" /> Runs offline after first load ·
                 model cached in your browser
               </p>
-              <span className="mono flex items-center gap-1.5 text-xs text-muted-foreground">
-                <Github className="size-3.5" /> Built with ONNX Runtime Web +
-                WebCodecs
-              </span>
+              <a
+                href="https://github.com/tengfone/redactorlocal"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="mono flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <Github className="size-3.5" /> github.com/tengfone/redactorlocal
+              </a>
             </footer>
           </div>
         </div>
