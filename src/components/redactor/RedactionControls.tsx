@@ -88,6 +88,24 @@ export function RedactionControls({
           onValueChange={([v]) => onChange({ ...options, padding: v / 100 })}
         />
       </div>
+
+      <div>
+        <div className="mb-2 flex items-center justify-between">
+          <p className="mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            Corner radius
+          </p>
+          <span className="mono text-xs font-semibold text-foreground">
+            {Math.round(options.radius * 200)}%
+          </span>
+        </div>
+        <Slider
+          value={[Math.round(options.radius * 200)]}
+          min={0}
+          max={100}
+          step={1}
+          onValueChange={([v]) => onChange({ ...options, radius: v / 200 })}
+        />
+      </div>
     </div>
   );
 }
