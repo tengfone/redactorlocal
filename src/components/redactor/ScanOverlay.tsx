@@ -3,6 +3,8 @@ import { ScanFace } from "lucide-react";
 interface ScanOverlayProps {
   /** "image" runs a one-shot detection, "video" a multi-frame scan. */
   mode: "image" | "video";
+  /** True while the AI engine is still warming up (first load). */
+  engineLoading?: boolean;
   /** 0 - 1 progress for video scans. */
   progress?: number;
   /** Faces found so far (shown live during video scans). */
@@ -13,7 +15,12 @@ interface ScanOverlayProps {
  * AI-lab style processing overlay rendered directly on top of the media:
  * a sweeping scan band, drifting grid, corner brackets and a live readout.
  */
-export function ScanOverlay({ mode, progress = 0, found = 0 }: ScanOverlayProps) {
+export function ScanOverlay({
+  mode,
+  engineLoading = false,
+  progress = 0,
+  found = 0,
+}: ScanOverlayProps) {
   const pct = Math.round(progress * 100);
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
