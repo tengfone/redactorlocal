@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 
-/** Tracks browser online/offline status (client-side only). */
+/**
+ * Tracks browser online/offline status. Always returns `true` for the initial
+ * (server + first client) render so SSR markup matches the client and React
+ * does not throw a hydration mismatch. The real status is applied after mount.
+ */
 export function useOnlineStatus(): boolean {
-  const [online, setOnline] = useState<boolean>(
-    typeof navigator === "undefined" ? true : navigator.onLine,
-  );
+  const [online, setOnline] = useState<boolean>(true);
 
   useEffect(() => {
     const update = () => setOnline(navigator.onLine);
