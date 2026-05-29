@@ -14,9 +14,21 @@ import { applyRedaction } from "@/lib/redactor/redaction";
 import {
   DEFAULT_REDACTION,
   type ExecutionProvider,
+  type FaceBox,
   type RedactionOptions,
   type TrackedFace,
 } from "@/lib/redactor/types";
+
+/** Shape of the dynamically-imported client-only detector module. */
+type DetectorModule = {
+  loadDetector: () => Promise<unknown>;
+  getActiveProvider: () => ExecutionProvider;
+  detectFaces: (
+    source: HTMLImageElement | HTMLVideoElement | HTMLCanvasElement,
+    srcW: number,
+    srcH: number,
+  ) => Promise<FaceBox[]>;
+};
 import {
   scanVideo,
   boxesAt,
