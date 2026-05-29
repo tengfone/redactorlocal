@@ -18,6 +18,7 @@ interface ScanParams {
   detect: () => Promise<FaceBox[]>;
   maxSamples?: number;
   onProgress?: (ratio: number) => void;
+  onFaces?: (count: number) => void;
   signal?: AbortSignal;
 }
 
