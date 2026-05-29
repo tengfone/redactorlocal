@@ -125,6 +125,6 @@ export function applyRedaction(
   for (const face of faces) {
     if (face.keep) continue;
     const rect = padRect(face, options.padding, canvasW, canvasH);
-    redactRegion(ctx, rect, options.mode, options.strength);
+    redactRegion(ctx, rect, options.mode, options.strength, options.radius);
   }
 }
