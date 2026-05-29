@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { UploadCloud, Image as ImageIcon, Film } from "lucide-react";
+import { UploadCloud } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface DropzoneProps {
@@ -19,9 +19,7 @@ export function Dropzone({ onFile }: DropzoneProps) {
   };
 
   return (
-    <button
-      type="button"
-      onClick={() => inputRef.current?.click()}
+    <div
       onDragOver={(e) => {
         e.preventDefault();
         setDragging(true);
@@ -33,30 +31,34 @@ export function Dropzone({ onFile }: DropzoneProps) {
         handleFiles(e.dataTransfer.files);
       }}
       className={cn(
-        "group relative flex w-full flex-col items-center justify-center gap-5 overflow-hidden rounded-2xl border-2 border-dashed px-6 py-16 text-center transition-colors",
+        "dot-grid relative flex w-full flex-col items-center justify-center gap-5 rounded-xl border-2 border-dashed px-6 py-16 text-center transition-colors",
         dragging
-          ? "border-primary bg-primary/10"
-          : "border-border bg-card/40 hover:border-primary/50",
+          ? "border-primary bg-primary/5"
+          : "border-border bg-card hover:border-primary/40",
       )}
     >
-      <div className="pointer-events-none absolute inset-0 grid-texture opacity-30" />
-      <div className="relative flex size-16 items-center justify-center rounded-2xl border border-primary/30 bg-primary/10 text-primary">
+      <div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
         <UploadCloud className="size-8" />
       </div>
-      <div className="relative space-y-1.5">
-        <p className="text-lg font-semibold text-foreground">
-          Drop an image or video to redact
-        </p>
-        <p className="mono text-xs text-muted-foreground">
-          Processed locally on your device · never uploaded
+      <div className="space-y-1.5">
+        <h2 className="font-heading text-2xl font-bold tracking-tight">
+          Drop media to redact
+        </h2>
+        <p className="mx-auto max-w-sm text-sm text-muted-foreground">
+          Your files never leave your device. All inference runs locally on your
+          own GPU via WebGPU.
         </p>
       </div>
-      <div className="relative flex items-center gap-3 text-muted-foreground">
-        <span className="mono flex items-center gap-1.5 rounded-md border border-border bg-secondary/40 px-2.5 py-1 text-[10px]">
-          <ImageIcon className="size-3.5" /> JPG · PNG · WEBP
-        </span>
-        <span className="mono flex items-center gap-1.5 rounded-md border border-border bg-secondary/40 px-2.5 py-1 text-[10px]">
-          <Film className="size-3.5" /> MP4 · WEBM · MOV
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          className="rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-colors hover:bg-primary/90"
+        >
+          Select Files
+        </button>
+        <span className="mono rounded-lg bg-secondary px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+          JPG · PNG · MP4 · WEBM
         </span>
       </div>
       <input
@@ -66,6 +68,6 @@ export function Dropzone({ onFile }: DropzoneProps) {
         className="hidden"
         onChange={(e) => handleFiles(e.target.files)}
       />
-    </button>
+    </div>
   );
 }
