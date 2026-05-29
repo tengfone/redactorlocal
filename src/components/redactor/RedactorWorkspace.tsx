@@ -14,9 +14,21 @@ import { applyRedaction } from "@/lib/redactor/redaction";
 import {
   DEFAULT_REDACTION,
   type ExecutionProvider,
+  type FaceBox,
   type RedactionOptions,
   type TrackedFace,
 } from "@/lib/redactor/types";
+
+/** Shape of the dynamically-imported client-only detector module. */
+type DetectorModule = {
+  loadDetector: () => Promise<unknown>;
+  getActiveProvider: () => ExecutionProvider;
+  detectFaces: (
+    source: HTMLImageElement | HTMLVideoElement | HTMLCanvasElement,
+    srcW: number,
+    srcH: number,
+  ) => Promise<FaceBox[]>;
+};
 import {
   scanVideo,
   boxesAt,
@@ -54,9 +66,7 @@ export function RedactorWorkspace() {
   const stepRef = useRef(0.2);
   const rafRef = useRef<number | null>(null);
   const overlayTickRef = useRef(0);
-  const detectModRef = useRef<
-    typeof import("@/lib/redactor/detector.client") | null
-  >(null);
+  const detectModRef = useRef<DetectorModule | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -70,7 +80,7 @@ export function RedactorWorkspace() {
     if (!detectModRef.current) {
       setModelStatus("loading");
       try {
-        const mod = await import("@/lib/redactor/detector.client");
+        const mod = await import("@/lib/redactor/detector.runtime");
         await mod.loadDetector();
         detectModRef.current = mod;
         setProvider(mod.getActiveProvider());
