@@ -12,12 +12,8 @@ export interface ExportVideoParams {
   height: number;
   fps: number;
   options: RedactionOptions;
-  /** Detect faces for the frame currently drawn on the video element. */
-  detect: (
-    source: HTMLVideoElement,
-    w: number,
-    h: number,
-  ) => Promise<ExportFace[]>;
+  /** Deterministic faces for a given time, taken from the scan pass. */
+  getFrameFaces: (timeSec: number) => ExportFace[];
   onProgress?: (ratio: number) => void;
   signal?: AbortSignal;
 }
@@ -45,13 +41,12 @@ function seek(video: HTMLVideoElement, time: number): Promise<void> {
 
 /**
  * Re-encode a redacted copy of the video entirely in the browser using
- * WebCodecs + mp4-muxer. Steps through the source frame-by-frame, runs
- * detection, applies redaction, then encodes. Audio is not carried over.
+ * WebCodecs + mp4-muxer. Audio is not carried over.
  */
 export async function exportRedactedVideo(
   params: ExportVideoParams,
 ): Promise<Blob> {
-  const { video, width, height, fps, options, detect, onProgress, signal } =
+  const { video, width, height, fps, options, getFrameFaces, onProgress, signal } =
     params;
 
   if (!isVideoExportSupported()) {
@@ -64,11 +59,7 @@ export async function exportRedactedVideo(
 
   const muxer = new Muxer({
     target: new ArrayBufferTarget(),
-    video: {
-      codec: "avc",
-      width,
-      height,
-    },
+    video: { codec: "avc", width, height },
     fastStart: "in-memory",
   });
 
@@ -91,43 +82,30 @@ export async function exportRedactedVideo(
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
   if (!ctx) throw new Error("CANVAS_UNAVAILABLE");
 
-  const wasPaused = video.paused;
-  video.pause();
-
   const duration = video.duration;
   const frameDuration = 1 / fps;
   const totalFrames = Math.max(1, Math.floor(duration * fps));
 
-  try {
-    for (let i = 0; i < totalFrames; i++) {
-      if (signal?.aborted) throw new Error("ABORTED");
-      const t = i * frameDuration;
-      await seek(video, t);
-      ctx.drawImage(video, 0, 0, width, height);
-      const faces = await detect(video, width, height);
-      applyRedaction(ctx, faces, options);
+  for (let i = 0; i < totalFrames; i++) {
+    if (signal?.aborted) throw new Error("ABORTED");
+    const t = i * frameDuration;
+    await seek(video, t);
+    ctx.drawImage(video, 0, 0, width, height);
+    applyRedaction(ctx, getFrameFaces(t), options);
 
-      const frame = new VideoFrameCtor(canvas, {
-        timestamp: Math.round(t * 1_000_000),
-        duration: Math.round(frameDuration * 1_000_000),
-      });
-      // keyframe roughly every 2 seconds
-      encoder.encode(frame, { keyFrame: i % (fps * 2) === 0 });
-      frame.close();
+    const frame = new VideoFrameCtor(canvas, {
+      timestamp: Math.round(t * 1_000_000),
+      duration: Math.round(frameDuration * 1_000_000),
+    });
+    encoder.encode(frame, { keyFrame: i % (fps * 2) === 0 });
+    frame.close();
 
-      onProgress?.((i + 1) / totalFrames);
-      // Yield to keep the UI responsive.
-      if (i % 4 === 0) await new Promise((r) => setTimeout(r, 0));
-    }
-
-    await encoder.flush();
-    muxer.finalize();
-  } finally {
-    if (!wasPaused) {
-      // best effort restore
-      video.play().catch(() => {});
-    }
+    onProgress?.((i + 1) / totalFrames);
+    if (i % 4 === 0) await new Promise((r) => setTimeout(r, 0));
   }
+
+  await encoder.flush();
+  muxer.finalize();
 
   const { buffer } = muxer.target as ArrayBufferTarget;
   return new Blob([buffer], { type: "video/mp4" });
