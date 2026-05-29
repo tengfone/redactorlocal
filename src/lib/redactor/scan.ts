@@ -18,6 +18,7 @@ interface ScanParams {
   detect: () => Promise<FaceBox[]>;
   maxSamples?: number;
   onProgress?: (ratio: number) => void;
+  onFaces?: (count: number) => void;
   signal?: AbortSignal;
 }
 
@@ -29,7 +30,7 @@ interface ScanParams {
 export async function scanVideo(
   params: ScanParams,
 ): Promise<{ trajectories: FaceTrajectory[]; step: number }> {
-  const { duration, seek, detect, onProgress, signal } = params;
+  const { duration, seek, detect, onProgress, onFaces, signal } = params;
   const maxSamples = params.maxSamples ?? 220;
   const step = Math.min(0.5, Math.max(0.12, duration / maxSamples));
   const tracker = new FaceTracker(0.3, 4);
@@ -63,6 +64,7 @@ export async function scanVideo(
     }
     i += 1;
     onProgress?.(Math.min(1, i / total));
+    onFaces?.(map.size);
   }
 
   const trajectories = [...map.values()]

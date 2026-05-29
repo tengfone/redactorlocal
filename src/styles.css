@@ -194,4 +194,46 @@
   .animate-pulse-dot {
     animation: pulse-dot 1.6s ease-in-out infinite;
   }
+
+  /* Sweeping scan band used by the on-image processing overlay. */
+  @keyframes scan-sweep {
+    0% {
+      top: -18%;
+      opacity: 0;
+    }
+    12% {
+      opacity: 1;
+    }
+    88% {
+      opacity: 1;
+    }
+    100% {
+      top: 100%;
+      opacity: 0;
+    }
+  }
+
+  .animate-scan-sweep {
+    animation: scan-sweep 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+
+  @keyframes grid-drift {
+    from {
+      background-position: 0 0;
+    }
+    to {
+      background-position: 0 44px;
+    }
+  }
+
+  .animate-grid-drift {
+    animation: grid-drift 1.6s linear infinite;
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
 }

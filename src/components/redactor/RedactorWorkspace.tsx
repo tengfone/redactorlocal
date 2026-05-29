@@ -9,6 +9,7 @@ import { Dropzone } from "./Dropzone";
 import { PrivacyBadge } from "./PrivacyBadge";
 import { StatusBar } from "./StatusBar";
 import { RedactionControls } from "./RedactionControls";
+import { ScanOverlay } from "./ScanOverlay";
 import { FaceSelectionPanel } from "./FaceSelectionPanel";
 import { applyRedaction } from "@/lib/redactor/redaction";
 import {
@@ -27,6 +28,7 @@ type DetectorModule = {
     source: HTMLImageElement | HTMLVideoElement | HTMLCanvasElement,
     srcW: number,
     srcH: number,
+    options?: { tiled?: boolean; scoreThreshold?: number },
   ) => Promise<FaceBox[]>;
 };
 import {
@@ -51,6 +53,7 @@ export function RedactorWorkspace() {
   const [provider, setProvider] = useState<ExecutionProvider | null>(null);
   const [busy, setBusy] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
+  const [scanFaces, setScanFaces] = useState(0);
   const [exporting, setExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -174,6 +177,7 @@ export function RedactorWorkspace() {
     setOverlay([]);
     setPlaying(false);
     setScanProgress(0);
+    setScanFaces(0);
     setExportProgress(0);
     facesRef.current = [];
     keepRef.current = {};
@@ -199,6 +203,7 @@ export function RedactorWorkspace() {
             img,
             img.naturalWidth,
             img.naturalHeight,
+            { tiled: true },
           );
           const tracked: TrackedFace[] = result.map((f, i) => ({
             ...f,
@@ -242,12 +247,14 @@ export function RedactorWorkspace() {
         try {
           const mod = await ensureDetector();
           setBusy(true);
+          setScanFaces(0);
           abortRef.current = new AbortController();
           const { trajectories, step } = await scanVideo({
             duration: v.duration,
             seek: seekVideo,
             detect: () => mod.detectFaces(v, canvas.width, canvas.height),
             onProgress: setScanProgress,
+            onFaces: setScanFaces,
             signal: abortRef.current.signal,
           });
           trajRef.current = trajectories;
@@ -452,23 +459,16 @@ export function RedactorWorkspace() {
                   })}
 
                 {busy && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-background/70 backdrop-blur-sm">
-                    <Loader2 className="size-6 animate-spin text-primary" />
-                    <p className="mono text-xs text-muted-foreground">
-                      {mediaType === "video"
-                        ? `Scanning frames · ${Math.round(scanProgress * 100)}%`
-                        : "Detecting faces…"}
-                    </p>
-                    {mediaType === "video" && (
-                      <Progress
-                        value={scanProgress * 100}
-                        className="h-1 w-48"
-                      />
-                    )}
-                  </div>
+                  <ScanOverlay
+                    mode={mediaType === "video" ? "video" : "image"}
+                    progress={scanProgress}
+                    found={scanFaces}
+                  />
                 )}
 
-                <div className="pointer-events-none absolute inset-x-0 top-0 h-px animate-scanline bg-primary/70" />
+                {!busy && (
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-px animate-scanline bg-primary/70" />
+                )}
               </div>
             </div>
 
