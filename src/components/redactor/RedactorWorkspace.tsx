@@ -467,6 +467,7 @@ export function RedactorWorkspace() {
                 {busy && (
                   <ScanOverlay
                     mode={mediaType === "video" ? "video" : "image"}
+                    engineLoading={modelStatus === "loading"}
                     progress={scanProgress}
                     found={scanFaces}
                   />
