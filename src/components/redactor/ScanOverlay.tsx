@@ -58,21 +58,31 @@ export function ScanOverlay({
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center">
         <div className="relative flex size-14 items-center justify-center rounded-full border border-primary/40 bg-card/70">
           <span className="absolute inset-0 animate-ping rounded-full border border-primary/30" />
-          <ScanFace className="size-6 text-primary" />
+          {engineLoading ? (
+            <Loader2 className="size-6 animate-spin text-primary" />
+          ) : (
+            <ScanFace className="size-6 text-primary" />
+          )}
         </div>
 
         <div className="space-y-1">
           <p className="mono text-sm font-semibold tracking-wide text-foreground">
-            {mode === "video" ? "ANALYZING FRAMES" : "DETECTING FACES"}
+            {engineLoading
+              ? "WARMING UP ENGINE"
+              : mode === "video"
+                ? "ANALYZING FRAMES"
+                : "DETECTING FACES"}
           </p>
           <p className="mono text-[11px] text-primary">
-            {mode === "video"
-              ? `${pct}% · ${found} ${found === 1 ? "face" : "faces"} tracked`
-              : "Running multi-scale inference on your GPU"}
+            {engineLoading
+              ? "Loading the AI model into your browser…"
+              : mode === "video"
+                ? `${pct}% · ${found} ${found === 1 ? "face" : "faces"} tracked`
+                : "Running multi-scale inference on your GPU"}
           </p>
         </div>
 
-        {mode === "video" && (
+        {!engineLoading && mode === "video" && (
           <div className="mt-1 h-1 w-52 overflow-hidden rounded-full bg-secondary/70">
             <div
               className="h-full rounded-full bg-primary transition-[width] duration-200"
