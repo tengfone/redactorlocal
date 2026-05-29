@@ -177,6 +177,7 @@ export function RedactorWorkspace() {
     setOverlay([]);
     setPlaying(false);
     setScanProgress(0);
+    setScanFaces(0);
     setExportProgress(0);
     facesRef.current = [];
     keepRef.current = {};
