@@ -245,12 +245,14 @@ export function RedactorWorkspace() {
         try {
           const mod = await ensureDetector();
           setBusy(true);
+          setScanFaces(0);
           abortRef.current = new AbortController();
           const { trajectories, step } = await scanVideo({
             duration: v.duration,
             seek: seekVideo,
             detect: () => mod.detectFaces(v, canvas.width, canvas.height),
             onProgress: setScanProgress,
+            onFaces: setScanFaces,
             signal: abortRef.current.signal,
           });
           trajRef.current = trajectories;
