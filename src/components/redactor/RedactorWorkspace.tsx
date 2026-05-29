@@ -197,8 +197,9 @@ export function RedactorWorkspace() {
         const ctx = canvas.getContext("2d");
         ctx?.drawImage(img, 0, 0);
         try {
-          const mod = await ensureDetector();
           setBusy(true);
+          const mod = await ensureDetector();
+
           const result = await mod.detectFaces(
             img,
             img.naturalWidth,
@@ -245,9 +246,10 @@ export function RedactorWorkspace() {
         canvas.height = v.videoHeight;
         setSize({ w: v.videoWidth, h: v.videoHeight });
         try {
-          const mod = await ensureDetector();
           setBusy(true);
+          const mod = await ensureDetector();
           setScanFaces(0);
+
           abortRef.current = new AbortController();
           const { trajectories, step } = await scanVideo({
             duration: v.duration,
