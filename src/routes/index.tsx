@@ -1,11 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   ScanFace,
-  Layers,
-  ShieldCheck,
   WifiOff,
   Lock,
   Github,
+  Upload,
+  SlidersHorizontal,
+  Download,
+  Cpu,
 } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { RedactorWorkspace } from "@/components/redactor/RedactorWorkspace";
@@ -32,10 +34,11 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const NAV = [
-  { label: "Redactor", icon: ScanFace, active: true },
-  { label: "Batch Tasks", icon: Layers, active: false },
-  { label: "Privacy Audit", icon: ShieldCheck, active: false },
+const STEPS = [
+  { icon: Upload, title: "Drop media", desc: "Image or video, straight from your device" },
+  { icon: ScanFace, title: "Detect faces", desc: "On-device AI finds every face" },
+  { icon: SlidersHorizontal, title: "Redact", desc: "Blur, pixelate or black out" },
+  { icon: Download, title: "Export", desc: "Save the redacted result locally" },
 ];
 
 function Index() {
@@ -44,7 +47,7 @@ function Index() {
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background text-foreground">
       {/* Sidebar */}
-      <aside className="hidden w-64 flex-shrink-0 flex-col border-r border-border bg-sidebar lg:flex">
+      <aside className="hidden w-72 flex-shrink-0 flex-col border-r border-border bg-sidebar lg:flex">
         <div className="flex h-16 items-center gap-2 border-b border-border px-6">
           <div className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <div className="size-3.5 rounded-sm border-2 border-current" />
@@ -54,23 +57,38 @@ function Index() {
           </span>
         </div>
 
-        <nav className="flex-1 space-y-1 p-4">
-          {NAV.map((item) => (
-            <button
-              key={item.label}
-              type="button"
-              className={cn(
-                "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                item.active
-                  ? "bg-card text-primary shadow-sm"
-                  : "text-muted-foreground hover:bg-card/60 hover:text-foreground",
-              )}
-            >
-              <item.icon className="size-5" />
-              {item.label}
-            </button>
-          ))}
-        </nav>
+        <div className="flex-1 overflow-y-auto p-6">
+          {/* How it works */}
+          <p className="mono mb-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+            How it works
+          </p>
+          <ol className="space-y-1">
+            {STEPS.map((step, i) => (
+              <li key={step.title} className="relative flex gap-3 pb-5 last:pb-0">
+                {i < STEPS.length - 1 && (
+                  <span className="absolute left-[15px] top-9 h-[calc(100%-1.5rem)] w-px bg-border" />
+                )}
+                <span className="z-10 flex size-8 flex-shrink-0 items-center justify-center rounded-full border border-border bg-card text-primary">
+                  <step.icon className="size-4" />
+                </span>
+                <div className="pt-0.5">
+                  <p className="text-sm font-semibold leading-tight">{step.title}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{step.desc}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+
+          {/* Privacy guarantees */}
+          <p className="mono mb-3 mt-8 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+            Guarantees
+          </p>
+          <div className="space-y-2">
+            <Guarantee icon={Lock} label="Nothing ever uploaded" />
+            <Guarantee icon={WifiOff} label="Works fully offline" />
+            <Guarantee icon={Cpu} label="Runs on your own GPU" />
+          </div>
+        </div>
 
         <div className="border-t border-border p-6">
           <p className="mono mb-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
@@ -80,6 +98,14 @@ function Index() {
             <StatusRow label="ONNX Runtime" value="Active" />
             <StatusRow label="WebGPU" value="Accelerated" />
           </div>
+          <a
+            href="https://github.com/tengfone/redactorlocal"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="mono mt-4 flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <Github className="size-3.5" /> View source
+          </a>
         </div>
       </aside>
 
@@ -158,6 +184,21 @@ function Index() {
       </main>
 
       <Toaster />
+    </div>
+  );
+}
+
+function Guarantee({
+  icon: Icon,
+  label,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+}) {
+  return (
+    <div className="flex items-center gap-2.5 text-sm text-foreground">
+      <Icon className="size-4 flex-shrink-0 text-primary" />
+      {label}
     </div>
   );
 }
